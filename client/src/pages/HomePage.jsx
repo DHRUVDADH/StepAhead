@@ -358,7 +358,7 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="w-full flex flex-col justify-center items-center py-3 gap-4">
+        <div className="w-full flex flex-col justify-center items-center py-3 gap-4 my-10">
           <div className="text-3xl">Explore Marketplace</div>
           <div className="text-xl tracking-tight text-custom-gray text-center">
             Enroll now using your email and start your journey to success.
