@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 // import { Link } from 'react-router-dom'
 import charusatLogo from "../assets/charusat_logo.png";
 import homepageImage from "../assets/homepage.avif";
@@ -33,6 +34,7 @@ import svg2 from "../assets/homepage_svg2.svg";
 import instaIcon from "../assets/insta_icon.png";
 import mailIcon from "../assets/mail_icon.png";
 import linkedInIcon from "../assets/linkedin_icon.png";
+import { Link } from "react-router-dom";
 
 const logos = [
   company1,
@@ -49,36 +51,78 @@ const logos = [
   company12,
 ];
 
-const HomePage = () => {
+const HomePage = ({ theme, setTheme }) => {
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+
+  };
+
+  const scrollToSection = (elementId) => {
+    document.getElementById(elementId).scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section className="w-screen min-h-screen">
-      <div className="h-fit w-full flex flex-col gap-2">
-        <div className="flex justify-between items-center px-10 py-5 mt-2">
-          <div className="h-fit w-fit p-2 bg-white rounded-lg">
+      <div className="relative h-fit w-full flex flex-col">
+        <div className="absolute w-full flex justify-between items-center px-10 py-5 bg-custom-bg/80  z-10">
+          <div className="h-fit w-fit p-2 rounded-lg">
             <img className="h-10" src={charusatLogo} />
           </div>
           <div className="flex justify-center items-center">
-            <div className="mr-12 w-fit h-fit">Home</div>
-            <div className="mr-12 w-fit h-fit">About Us</div>
-            <div className="mr-12 w-fit h-fit">More</div>
-            <div className="mr-12 w-fit h-fit">Contact Us</div>
-            <button className="h-fit w-fit px-8 py-3 rounded-lg bg-white text-custom-primary-color font-bold mr-4">
+            <div
+              onClick={() => scrollToSection("home")}
+              className="mr-12 w-fit h-fit cursor-pointer"
+            >
+              Home
+            </div>
+            <div
+              onClick={() => scrollToSection("about")}
+              className="mr-12 w-fit h-fit cursor-pointer"
+            >
+              About Us
+            </div>
+            <div
+              onClick={() => scrollToSection("more")}
+              className="mr-12 w-fit h-fit cursor-pointer"
+            >
+              More
+            </div>
+            <div
+              onClick={() => scrollToSection("contact")}
+              className="mr-12 w-fit h-fit cursor-pointer"
+            >
+              Contact Us
+            </div>
+            <button
+              onClick={()=>{toggleTheme()}}
+              className="text-custom-text-color h-10 w-10 rounded-full mr-4 border-custom-text-color border-[1px] transition-all ease-in"
+            >
+              <i className="fa-solid fa-moon"></i>
+            </button>
+            <Link
+              to="/login"
+              className="h-fit w-fit px-8 py-3 rounded-lg bg-white text-custom-primary-color mr-4 cursor-pointer font-extrabold"
+            >
               Login
-            </button>
-            <button className="h-fit w-fit px-8 py-3 rounded-lg bg-custom-primary-color">
+            </Link>
+            <Link className="h-fit w-fit px-8 py-3 rounded-lg bg-custom-primary-color cursor-pointer text-white font-bold ">
               Signup
-            </button>
+            </Link>
           </div>
         </div>
 
-        <div className="relative h-[650px] overflow-y-hidden w-full">
+        <div
+          id="home"
+          className="relative top-0 right-0 h-[750px] overflow-y-hidden w-full"
+        >
           <img
-            className="absolute top-[-30px] left-0 w-full opacity-50"
+            className="absolute top-[-30px] left-0 w-full opacity-80"
             src={homepageImage}
             alt=""
           />
           <div className="relative h-full flex flex-col justify-end pb-20 pl-10 left-0 z-10 w-fit">
-            <div className="text-5xl font-extrabold mb-4">
+            <div className="text-5xl font-extrabold mb-4 ">
               Experience placements
               <br />
               like never before
@@ -101,46 +145,46 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="flex justify-around py-5">
+        <div id="about" className="flex justify-around py-5">
           <div className="flex items-center gap-4">
-            <div className="h-fit w-fit p-4 rounded-full bg-white">
+            <div className="h-fit w-fit p-4 rounded-full bg-white shadow-custom-box-shadow">
               <img className="h-10 object-center" src={logo1} alt="" />
             </div>
             <div className="flex flex-col">
-              <div className="text-xl">500+ courses</div>
+              <div className="text-xl font-bold">500+ courses</div>
               <div className="text-custom-primary-color text-xs">
                 Crafted for Placement Readiness
               </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <div className="h-fit w-fit p-4 rounded-full bg-white">
+            <div className="h-fit w-fit p-4 rounded-full bg-white shadow-custom-box-shadow">
               <img className="h-10 object-center" src={logo2} alt="" />
             </div>
             <div className="flex flex-col">
-              <div className="text-xl">Unified reporting</div>
+              <div className="text-xl font-bold">Unified reporting</div>
               <div className="text-custom-primary-color text-xs">
                 Placement insights in one dashboard
               </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <div className="h-fit w-fit p-4 rounded-full bg-white">
+            <div className="h-fit w-fit p-4 rounded-full bg-white shadow-custom-box-shadow">
               <img className="h-10 object-center" src={logo3} alt="" />
             </div>
             <div className="flex flex-col">
-              <div className="text-xl">2500+ assessments</div>
+              <div className="text-xl font-bold">2500+ assessments</div>
               <div className="text-custom-primary-color text-xs">
                 Industry level mock and daily practice
               </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <div className="h-fit w-fit p-4 rounded-full bg-white">
+            <div className="h-fit w-fit p-4 rounded-full bg-white shadow-custom-box-shadow">
               <img className="h-10 object-center" src={logo4} alt="" />
             </div>
             <div className="flex flex-col">
-              <div className="text-xl">AI-Driven technology</div>
+              <div className="text-xl font-bold">AI-Driven technology</div>
               <div className="text-custom-primary-color text-xs">
                 AI to boost placement success
               </div>
@@ -149,7 +193,7 @@ const HomePage = () => {
         </div>
 
         <div className="flex flex-col  gap-10 mt-20">
-          <div className="text-3xl text-center leading-loose">
+          <div className="text-3xl text-center leading-loose font-extrabold">
             Trusted by over 100+ companies
             <br />
             and 30,000+ students
@@ -172,8 +216,10 @@ const HomePage = () => {
 
         <div className="w-full h-fit px-20 py-20 flex flex-col justify-center items-center">
           <div className="flex flex-col justify-center items-center gap-2">
-            <div className="text-3xl">Unlocking Opportunities for all</div>
-            <div className="text-custom-gray">
+            <div className="text-3xl font-extrabold">
+              Unlocking Opportunities for all
+            </div>
+            <div className="text-custom-text-color">
               Empowering learners and institutions with limitless possibilities
               for growth and success.
             </div>
@@ -186,14 +232,14 @@ const HomePage = () => {
             <div className="w-fit h-[280px] flex justify-center items-center gap-20">
               <div className="pl-[178px] w-[430px] h-fit flex items-end">
                 <img
-                  className="mr-[1px] h-[250px] w-[250px] object-cover rounded-full border-white border-[2px]"
+                  className="mr-[1px] h-[250px] w-[250px] object-cover rounded-full border-custom-primary-color border-[2px]"
                   src={homepageCircle1}
                   alt=""
                 />
               </div>
               <div>
                 <div className="text-xl font-bold">Students</div>
-                <div className="text-custom-gray text-sm">
+                <div className="text-custom-text-color text-sm">
                   Build skills and employability through our
                   <br />
                   extensive placement preparation courses, industry-
@@ -205,7 +251,7 @@ const HomePage = () => {
             <div className="w-fit h-[280px] flex justify-center items-center gap-20">
               <div className="pr-[1px]">
                 <div className="text-xl font-bold">Placement Officers</div>
-                <div className="text-custom-gray text-sm">
+                <div className="text-custom-text-color text-sm">
                   Optimize placement success with tailored
                   <br />
                   courses, unified-reporting, collaborative features,
@@ -214,7 +260,7 @@ const HomePage = () => {
                 </div>
               </div>
               <img
-                className=" h-[250px] w-[250px] object-cover rounded-full border-white border-[2px]"
+                className=" h-[250px] w-[250px] object-cover rounded-full border-custom-primary-color border-[2px]"
                 src={homepageCircle2}
                 alt=""
               />
@@ -222,18 +268,21 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="w-full h-fit flex flex-col justify-center items-center gap-10 mt-10">
-          <div className="text-3xl">Why Choose Us?</div>
+        <div
+          id="more"
+          className="w-full h-fit flex flex-col justify-center items-center gap-10 mt-10"
+        >
+          <div className="text-3xl font-extrabold">Why Choose Us?</div>
           <div className="bg-custom-gray rounded-2xl w-fit h-fit flex gap-20 px-10 py-10">
             <div className="flex gap-4">
               <div className="h-20 w-20 rounded-full bg-white flex justify-center items-center shadow-custom-box-shadow">
                 <img className="w-16" src={logo5} alt="" />
               </div>
               <div>
-                <div className="text-xl text-black font-bold">
+                <div className="text-xl text-custom-text-color font-bold">
                   Centralized Placement Management
                 </div>
-                <div className="text-xs text-black font-light leading-4">
+                <div className="text-xs text-custom-text-color font-light leading-4">
                   A unified platforrn for placement officers to track student
                   <br />
                   performance, manage drives, and evaluate candidates-all in one
@@ -247,10 +296,10 @@ const HomePage = () => {
                 <img className="w-12" src={logo6} alt="" />
               </div>
               <div>
-                <div className="text-xl text-black font-bold">
+                <div className="text-xl text-custom-text-color font-bold">
                   One-Stop Student Preparation
                 </div>
-                <div className="text-xs text-black font-light leading-4">
+                <div className="text-xs text-custom-text-color font-light leading-4">
                   Streamline interview practice, assessments, and progress
                   <br />
                   tracking for students on a single platform, minimizing
@@ -262,18 +311,19 @@ const HomePage = () => {
           </div>
         </div>
 
-        
-
-        <div className="w-full flex flex-col justify-center items-center py-3 gap-4 my-10">
-          <div className="text-3xl">Explore Marketplace</div>
-          <div className="text-xl tracking-tight text-custom-gray text-center">
+        <div
+          id="contact"
+          className="w-full flex flex-col justify-center items-center py-3 gap-4 my-10"
+        >
+          <div className="text-3xl font-extrabold">Explore Marketplace</div>
+          <div className="text-xl tracking-tight text-custom-text-color text-center">
             Enroll now using your email and start your journey to success.
             <br />
             Explore our marketplace now, absolutely free!
           </div>
           <div className="flex gap-4 mt-4">
             <input
-              className="border-white border-[1px] rounded-[4px] text-white bg-transparent placeholder:text-white w-[300px] py-2 pl-3"
+              className="border-custom-text-color placeholder:text-custom-text-color border-[1px] rounded-[4px] text-sm bg-transparent  w-[300px] py-4 pl-3"
               type="email"
               placeholder="Enter your Email ID"
             />
@@ -283,9 +333,9 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="bg-custom-bg-2 flex justify-between items-start px-10 py-5">
+        <div className="bg-custom-gray/50 flex justify-between items-start px-10 py-5">
           <div className="w-[300px] flex flex-col justify-center items-start gap-2">
-            <div className="bg-white w-fit h-fit p-2 rounded-lg">
+            <div className=" w-fit h-fit p-2 rounded-lg">
               <img className="h-10" src={charusatLogo} alt="" />
             </div>
             <div className="w-[300px] text-sm mb-4">
@@ -311,32 +361,40 @@ const HomePage = () => {
           </div>
           <div className="flex flex-col gap-2">
             <div className="mb-4">About</div>
-            <div className="text-[#aaaaaa] text-sm">Blog</div>
-            <div className="text-[#aaaaaa] text-sm">Community</div>
-            <div className="text-[#aaaaaa] text-sm">Marketplace</div>
-            <div className="text-[#aaaaaa] text-sm">Products</div>
-            <div className="text-[#aaaaaa] text-sm">Company</div>
-            <div className="text-[#aaaaaa] text-sm">Career</div>
-            <div className="text-[#aaaaaa] text-sm">Security</div>
+            <div className="text-custom-text-color text-sm">Blog</div>
+            <div className="text-custom-text-color text-sm">Community</div>
+            <div className="text-custom-text-color text-sm">Marketplace</div>
+            <div className="text-custom-text-color text-sm">Products</div>
+            <div className="text-custom-text-color text-sm">Company</div>
+            <div className="text-custom-text-color text-sm">Career</div>
+            <div className="text-custom-text-color text-sm">Security</div>
           </div>
           <div className="flex flex-col gap-2">
             <div className="mb-4">Explore</div>
-            <div className="text-[#aaaaaa] text-sm">Terms of service</div>
-            <div className="text-[#aaaaaa] text-sm">Privacy Policy</div>
-            <div className="text-[#aaaaaa] text-sm">
+            <div className="text-custom-text-color text-sm">
+              Terms of service
+            </div>
+            <div className="text-custom-text-color text-sm">Privacy Policy</div>
+            <div className="text-custom-text-color text-sm">
               Accessibility statement
             </div>
-            <div className="text-[#aaaaaa] text-sm">Guide</div>
-            <div className="text-[#aaaaaa] text-sm">Cookie Settings</div>
-            <div className="text-[#aaaaaa] text-sm">Resource Library</div>
+            <div className="text-custom-text-color text-sm">Guide</div>
+            <div className="text-custom-text-color text-sm">
+              Cookie Settings
+            </div>
+            <div className="text-custom-text-color text-sm">
+              Resource Library
+            </div>
           </div>
           <div className="flex flex-col gap-2 mr-32">
             <div className="mb-4">Contact Us</div>
-            <div className="text-[#aaaaaa] text-sm">FAQs</div>
-            <div className="text-[#aaaaaa] text-sm">Email Support</div>
-            <div className="text-[#aaaaaa] text-sm">Documents</div>
-            <div className="text-[#aaaaaa] text-sm">Customer Support</div>
-            <div className="text-[#aaaaaa] text-sm">Help</div>
+            <div className="text-custom-text-color text-sm">FAQs</div>
+            <div className="text-custom-text-color text-sm">Email Support</div>
+            <div className="text-custom-text-color text-sm">Documents</div>
+            <div className="text-custom-text-color text-sm">
+              Customer Support
+            </div>
+            <div className="text-custom-text-color text-sm">Help</div>
           </div>
         </div>
       </div>

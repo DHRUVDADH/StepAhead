@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Manrope:wght@200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Manrope:wght@200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -11,8 +11,20 @@ body {
   box-sizing: border-box;
 }
 
-
-
+.light {
+  --custom-primary-color: 95, 90, 217;
+  --custom-bg: 255, 255, 255;
+  --custom-bg-2: 221, 221, 221;
+  --custom-gray: 170, 170, 170;
+  --custom-text-color: 0, 0, 0;
+}
+.dark {
+  --custom-primary-color: 95, 90, 217;
+  --custom-bg: 17, 19, 21;
+  --custom-bg-2: 41, 44, 45;
+  --custom-gray: 53, 49, 76;
+  --custom-text-color: 255, 255, 255;
+}
 
 @keyframes scroll {
   0% {
@@ -27,4 +39,3 @@ body {
   display: flex;
   animation: scroll 30s linear infinite;
 }
-
