@@ -32,22 +32,20 @@ const userSchema = new Schema(
       lowercase: true,
     },
     collegeId: {
-      unique: true,
+      // unique: true,
       type: String,
-      index: true,
+      // index: true,
       lowercase: true,
     },
     firstname: {
       required: true,
       type: String,
-      unique: true,
       trim: true,
       index: true,
     },
     lastname: {
       required: true,
       type: String,
-      unique: true,
       trim: true,
       index: true,
     },
@@ -78,11 +76,10 @@ const userSchema = new Schema(
     avatar: {
       type: String,
     },
-    mobileNo: {
-      type: Number,
-      unique: true,
-      max: 10,
-    },
+    // mobileNo: {
+    //   type: String,
+    //   default: undefined // Instead of null
+    // },
     gender: {
       type: String,
       enum: ["male", "female"],
@@ -142,8 +139,9 @@ userSchema.methods.generateAccessToken = function () {
     {
       _id: this._id,
       email: this.email,
-      username: this.username,
-      fullName: this.fullName,
+      lastname: this.lastname,
+      firstname: this.firstname,
+      userRole: this.userRole,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {

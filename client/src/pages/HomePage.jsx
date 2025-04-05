@@ -52,10 +52,8 @@ const logos = [
 ];
 
 const HomePage = ({ theme, setTheme }) => {
-
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
-
   };
 
   const scrollToSection = (elementId) => {
@@ -95,7 +93,9 @@ const HomePage = ({ theme, setTheme }) => {
               Contact Us
             </div>
             <button
-              onClick={()=>{toggleTheme()}}
+              onClick={() => {
+                toggleTheme();
+              }}
               className="text-custom-text-color h-10 w-10 rounded-full mr-4 border-custom-text-color border-[1px] transition-all ease-in"
             >
               <i className="fa-solid fa-moon"></i>
@@ -106,7 +106,10 @@ const HomePage = ({ theme, setTheme }) => {
             >
               Login
             </Link>
-            <Link className="h-fit w-fit px-8 py-3 rounded-lg bg-custom-primary-color cursor-pointer text-white font-bold ">
+            <Link
+              to="/signup"
+              className="h-fit w-fit px-8 py-3 rounded-lg bg-custom-primary-color cursor-pointer text-white font-bold "
+            >
               Signup
             </Link>
           </div>
