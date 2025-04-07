@@ -33,14 +33,12 @@ const SignupPage = () => {
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/users/signup",
-        userData,
+        userData
       );
 
-      console.log(response)
+      console.log(response);
       toast.success("Signup successful! Please log in.");
-      navigate("/login")
-
-
+      navigate("/login");
     } catch (error) {
       console.error(
         "Signup failed:",

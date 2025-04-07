@@ -5,8 +5,10 @@ import googleIcon from "../assets/google_icon.png";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../ProtectedRoutes/AuthContext";
 
 const LoginPage = () => {
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -30,10 +32,8 @@ const LoginPage = () => {
       );
 
       toast.success("Logged In Successfully");
-
-      localStorage.setItem("token", response.data.message.accessToken);
-      navigate("/dashboard");
-      console.log(response.data.message);
+      login(response.data.message.accessToken  ,response.data.message.user);
+      navigate("/enterProfileInformation");
     } catch (error) {
       console.error(
         "Login failed:",

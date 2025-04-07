@@ -2,7 +2,10 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.models.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import mongoose from "mongoose";
+import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
 
 const generateAccessAndRefereshTokens = async (userId) => {
   try {
@@ -75,10 +78,6 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const isPasswordValid = await user.isPasswordCorrect(password);
 
-  console.log("Entered Password:", password);
-  console.log("Stored Hashed Password:", user.password);
-  console.log("Password Comparison Result:", isPasswordValid);
-
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid User Credentials");
   }
@@ -113,4 +112,153 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser, loginUser };
+const setUserDetails = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new ApiError(400, "Invalid User ID format");
+  }
+
+  const userExist = await User.findById(userId);
+
+  if (!userExist) {
+    throw new ApiError(401, "Enter valid MenuItem");
+  }
+
+  const {
+    firstname,
+    lastname,
+    gender,
+    selectedDate,
+    mobileNo,
+    idNo,
+    batch,
+    degree,
+    department,
+    ssc,
+    hsc,
+    currentCgpa,
+    currentSem,
+  } = req.body;
+
+  const avatarFile = req.files?.avatar?.[0] || null;
+  const resumeFile = req.files?.resume?.[0] || null;
+
+  if (!selectedDate) {
+    throw new ApiError(400, "Date of Birth is required.");
+  }
+
+  const date = new Date(selectedDate);
+  const isValidDate = date instanceof Date && !isNaN(date);
+
+  if (!isValidDate) {
+    throw new ApiError(400, "Invalid Date of Birth.");
+  }
+
+  const requiredFields = [
+    firstname,
+    lastname,
+    gender,
+    mobileNo,
+    idNo,
+    batch,
+    degree,
+    department,
+    ssc,
+    hsc,
+    currentCgpa,
+    currentSem,
+  ];
+
+  if (
+    requiredFields.some(
+      (field) => !field || (typeof field === "string" && field.trim() === "")
+    )
+  ) {
+    throw new ApiError(400, "All fields are required.");
+  }
+
+  let avatarUrl = userExist.avatar || "";
+  let resumeUrl = userExist.resume || "";
+
+  // ----- Handle Avatar Upload -----
+  if (avatarFile) {
+    if (userExist.avatar) {
+      if (avatarUrl.startsWith("http")) {
+        const oldAvatarPublicId = avatarUrl.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(oldAvatarPublicId);
+      } else {
+        const localAvatarPath = path.join(
+          __dirname,
+          "../uploads",
+          path.basename(avatarUrl)
+        );
+        fs.unlink(localAvatarPath, (err) => {
+          if (err) console.error("Error deleting old avatar:", err);
+        });
+      }
+    }
+
+    const avatarUpload = await uploadOnCloudinary(avatarFile.path);
+    if (!avatarUpload.url) {
+      throw new ApiError(400, "Error uploading avatar to Cloudinary");
+    }
+    avatarUrl = avatarUpload.url;
+  }
+
+  // ----- Handle Resume Upload -----
+  if (resumeFile) {
+    if (userExist.resume) {
+      if (resumeUrl.startsWith("http")) {
+        const oldResumePublicId = resumeUrl.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(oldResumePublicId);
+      } else {
+        const localResumePath = path.join(
+          __dirname,
+          "../uploads",
+          path.basename(resumeUrl)
+        );
+        fs.unlink(localResumePath, (err) => {
+          if (err) console.error("Error deleting old resume:", err);
+        });
+      }
+    }
+
+    const resumeUpload = await uploadOnCloudinary(resumeFile.path);
+    if (!resumeUpload.url) {
+      throw new ApiError(400, "Error uploading resume to Cloudinary");
+    }
+    resumeUrl = resumeUpload.url;
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: {
+        firstname: firstname.toLowerCase(),
+        lastname: lastname.toLowerCase(),
+        gender,
+        dob: date,
+        mobileNo,
+        collegeId: idNo,
+        batch,
+        degree,
+        department,
+        sscPercent: ssc,
+        hscPercent: hsc,
+        currentCGPA: currentCgpa,
+        currentSemester: currentSem,
+        avatar: avatarUrl,
+        resume: resumeUrl,
+      },
+    },
+    { new: true }
+  );
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, updatedUser, "User details updated successfully.")
+    );
+});
+
+export { registerUser, loginUser, setUserDetails };

@@ -6,6 +6,7 @@ import SignupPage from "./pages/SignupPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import { AuthProvider } from "./ProtectedRoutes/AuthContext.jsx";
 import ProtectedRoute from "./ProtectedRoutes/ProtectedRoute.jsx";
+import EnterProfileInformation from "./pages/EnterProfileInformation.jsx";
 
 const App = () => {
   const [theme, setTheme] = useState(() => {
@@ -45,6 +46,7 @@ const App = () => {
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/enterProfileInformation" element={<EnterProfileInformation />} />
               {/* <Route path="/profile" element={<Profile />} /> */}
             </Route>
 

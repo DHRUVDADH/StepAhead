@@ -16,11 +16,12 @@ const degreeChoices = [
   "Bachelors of Technology",
   "Masters of Technology",
   "Bachelors in Bussiness Administration",
+  "Masters in Bussiness Administration",
   "Bachelors of Computer Applications",
   "Masters in Computer Application",
 ];
 
-const batchChoices = ["2020", "2021", "2022", "2023", "2024", "2025"];
+const batchChoices = ["2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028"];
 
 const userSchema = new Schema(
   {
@@ -75,11 +76,11 @@ const userSchema = new Schema(
     },
     avatar: {
       type: String,
+    },  
+    mobileNo: {
+      type: String,
+      default: undefined // Instead of null
     },
-    // mobileNo: {
-    //   type: String,
-    //   default: undefined // Instead of null
-    // },
     gender: {
       type: String,
       enum: ["male", "female"],
