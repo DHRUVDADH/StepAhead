@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { useAuth } from "../ProtectedRoutes/AuthContext.jsx";
@@ -12,7 +12,7 @@ import uploadIcon from "../assets/upload_icon.svg";
 
 const EnterProfileInformation = () => {
   const { user } = useAuth();
-
+  const navigate = useNavigate();
   const [showCalendar, setShowCalendar] = useState(false);
   const [showPersonalInfo, setShowPersonalInfo] = useState(true);
   const [avatar, setAvatar] = useState("");
@@ -31,6 +31,7 @@ const EnterProfileInformation = () => {
   const [currentCgpa, setCurrentCgpa] = useState("");
   const [currentSem, setCurrentSem] = useState("");
   const [resume, setResume] = useState("");
+  const [loading, setLoading] = useState(true);
 
   // console.log(avatar);
   // console.log(firstname);
@@ -48,12 +49,70 @@ const EnterProfileInformation = () => {
   // console.log(currentSem);
   // console.log(resume);
 
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (!token || !user?._id) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          `${import.meta.env.BACKEND_BASEURL}/api/v1/users/getUser/${user._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const userData = response.data.message;
+
+        // Set all the existing user data to state
+        setPreviewAvatar(userData.avatar);
+
+        setFirstname(userData.firstname || "");
+        setLastname(userData.lastname || "");
+        setGender(userData.gender || "");
+        setSelectedDate(userData.dob || undefined); // 🔴 CHANGE: Assuming backend uses 'dob' field
+        setMobileNo(userData.mobileNo || "");
+        setIdNo(userData.collegeId || "");
+        setBatch(userData.batch || "");
+        setDegree(userData.degree || "");
+        setDepartment(userData.department || "");
+        setSsc(userData.sscPercent || "");
+        setHsc(userData.hscPercent || "");
+        setCurrentCgpa(userData.currentCGPA || "");
+        setCurrentSem(userData.currentSemester || "");
+        // console.log(userData.resume);
+        setResume(userData.resume);
+
+        // For resume, we can't pre-populate the file input but can show the filename
+        // if (userData.resume) {
+        //   // Extract filename from path if needed
+        //   const resumeName = userData.resume.split('/').pop();
+        //   setResume({ name: resumeName });
+        // }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        toast.error("Failed to load existing profile data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserDetails();
+  }, [user?._id]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (loading) return;
+
     const token = localStorage.getItem("accessToken");
     // console.log("User object:", user);
-    console.log("Token:" , token);
+    console.log("Token:", token);
 
     if (!token) {
       toast.error("Please login again");
@@ -79,7 +138,7 @@ const EnterProfileInformation = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/users/setUserDetails/${user._id}`,
+        `${import.meta.env.BACKEND_BASEURL}/api/v1/users/setUserDetails/${user._id}`,
         formData,
         {
           headers: {
@@ -90,12 +149,13 @@ const EnterProfileInformation = () => {
       );
 
       toast.success("User details updation completed successfully!");
+      navigate("/home/profile");
     } catch (error) {
       console.error(
-        "Login failed:",
+        "Profile Updation failed:",
         error.response?.data?.error || error.message
       );
-      toast.error("User Details Updation failed!");
+      toast.error("Profile Updation  failed!");
     }
   };
 
@@ -115,6 +175,13 @@ const EnterProfileInformation = () => {
       setPreviewAvatar(URL.createObjectURL(avatar1));
     }
   };
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        Loading profile data...
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-fit flex flex-col gap-8">
@@ -558,10 +625,10 @@ const EnterProfileInformation = () => {
             }}
           />
 
-          <div className="w-fit flex justify-center items-center px-4 py-2 bg-[#E9E5FB] gap-4 rounded-lg">
+          <div className="w-fit flex justify-center items-center px-4 py-2 bg-custom-bg-3 gap-4 rounded-lg">
             <label
               htmlFor="resume"
-              className="w-fit text-custom-bg font-medium cursor-pointer"
+              className="w-fit text-custom-text-color font-medium cursor-pointer"
             >
               Upload Resume
             </label>
@@ -573,14 +640,25 @@ const EnterProfileInformation = () => {
               resume ? `block` : `hidden`
             }`}
           >
-            {resume ? `${resume.name}` : ""}
+            {typeof resume === "string" ? (
+              <a
+                href={resume}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-2 text-blue-500 hover:underline"
+              >
+                (View)
+              </a>
+            ) : (
+              resume?.name
+            )}
           </div>
         </div>
 
         <div className="w-full flex justify-center items-center">
           <button
             type="submit"
-            className="bg-custom-primary-color/90 text-custom-bg px-20 py-2 rounded-lg"
+            className="bg-custom-bg-3 text-custom-text-color px-20 py-2 rounded-lg"
           >
             Submit
           </button>

@@ -24,7 +24,7 @@ const LoginPage = () => {
     };
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/login",
+        `${import.meta.env.BACKEND_BASEURL}/api/v1/users/login`,
         userData,
         {
           "Content-Type": "application/json",
@@ -33,7 +33,7 @@ const LoginPage = () => {
 
       toast.success("Logged In Successfully");
       login(response.data.message.accessToken  ,response.data.message.user);
-      navigate("/enterProfileInformation");
+      navigate("/home/profile");
     } catch (error) {
       console.error(
         "Login failed:",

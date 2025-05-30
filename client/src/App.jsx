@@ -7,6 +7,9 @@ import Dashboard from "./pages/Dashboard.jsx";
 import { AuthProvider } from "./ProtectedRoutes/AuthContext.jsx";
 import ProtectedRoute from "./ProtectedRoutes/ProtectedRoute.jsx";
 import EnterProfileInformation from "./pages/EnterProfileInformation.jsx";
+import Profile from "./pages/Profile.jsx";
+import Home2 from "./pages/Home2.jsx";
+import CourseAdmin from "./pages/CourseAdmin.jsx";
 
 const App = () => {
   const [theme, setTheme] = useState(() => {
@@ -46,8 +49,16 @@ const App = () => {
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/enterProfileInformation" element={<EnterProfileInformation />} />
-              {/* <Route path="/profile" element={<Profile />} /> */}
+              <Route
+                path="/enterProfileInformation"
+                element={<EnterProfileInformation />}
+              />
+
+              <Route path="/home" element={<Home2 />}>
+                <Route path="profile" element={<Profile />} />
+                <Route path="courseAdmin" element={<CourseAdmin />}></Route>
+                {/* Add more nested routes here */}
+              </Route>
             </Route>
 
             {/* Catch all */}

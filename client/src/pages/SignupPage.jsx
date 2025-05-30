@@ -32,7 +32,7 @@ const SignupPage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/signup",
+        `${import.meta.env.BACKEND_BASEURL}/api/v1/users/signup`,
         userData
       );
 

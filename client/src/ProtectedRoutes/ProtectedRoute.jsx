@@ -1,19 +1,18 @@
-// ProtectedRoute.js
 import { useAuth } from "./AuthContext";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 const ProtectedRoute = () => {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
-  // If user is not logged in, redirect to login page
   if (loading) {
-    return <div>Loading...</div>; // you can also show a loader component
-  }
-  if (!user) {
-    return <Navigate to="/error" replace />;
+    return <div>Loading authentication...</div>;
   }
 
-  // If authorized, render the child routes
+  if (!user || !localStorage.getItem("accessToken")) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
   return <Outlet />;
 };
 

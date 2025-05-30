@@ -43,8 +43,8 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.create({
-    firstname: firstname?.toLowerCase(),
-    lastname: lastname?.toLowerCase(),
+    firstname: firstname,
+    lastname: lastname,
     email,
     password,
     userRole,
@@ -110,6 +110,31 @@ const loginUser = asyncHandler(async (req, res) => {
         "User Logged In Successfully."
       )
     );
+});
+
+const logoutUser = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $unset: {
+        refreshToken: 1,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .clearCookie("refreshToken", options)
+    .clearCookie("accessToken", options)
+    .json(new ApiResponse(200, {}, "User Logged Out"));
 });
 
 const setUserDetails = asyncHandler(async (req, res) => {
@@ -234,8 +259,8 @@ const setUserDetails = asyncHandler(async (req, res) => {
     userId,
     {
       $set: {
-        firstname: firstname.toLowerCase(),
-        lastname: lastname.toLowerCase(),
+        firstname,
+        lastname,
         gender,
         dob: date,
         mobileNo,
@@ -261,4 +286,17 @@ const setUserDetails = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser, loginUser, setUserDetails };
+const getUserDetails = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new ApiError(400, "Invalid User ID format");
+  }
+
+  const userExist = await User.findById(userId);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, userExist, "User Details fetched successfully"));
+});
+
+export { registerUser, loginUser, logoutUser, setUserDetails, getUserDetails };

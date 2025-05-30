@@ -18,6 +18,8 @@ body {
   --custom-gray: 170, 170, 170;
   --custom-text-color: 0, 0, 0;
   --custom-bg-3: 233, 232, 253;
+  --custom-bg-4: 209, 207, 251;
+  --custom-d: 221, 221, 221;
 }
 .dark {
   --custom-primary-color: 95, 90, 217;
@@ -26,6 +28,8 @@ body {
   --custom-gray: 53, 49, 76;
   --custom-text-color: 255, 255, 255;
   --custom-bg-3: 59, 47, 107;
+  --custom-bg-4: 0, 2, 63;
+  --custom-d: 221, 221, 221;
 }
 
 @keyframes scroll {
@@ -41,8 +45,6 @@ body {
   display: flex;
   animation: scroll 30s linear infinite;
 }
-
-
 
 @layer base {
   :root {
@@ -99,9 +101,6 @@ body {
     --chart-5: 340 75% 55%;
   }
 }
-
-
-
 
 @layer base {
   * {
